@@ -58,6 +58,40 @@ class UI {
         }, 3000);
     }
 
+    agregarGastoListado(gastos) {
+        this.limpiarHTML(); // Elimina el HTML previo
+
+        // Iterar sobre los gastos
+        gastos.forEach(gasto => {
+            const {cantidad, nombre, id} = gasto;
+
+            // Crear un LI
+            const nuevoGasto = document.createElement('li');
+            nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center';
+            nuevoGasto.dataset.id = id;
+            console.log(nuevoGasto);
+
+
+            // Agregar el HTML del gasto
+            nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill"> ${cantidad} </span>`;
+
+            //  Boton para borrar el gasto
+            const btnBorrar = document.createElement('button');
+            btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
+            btnBorrar.innerHTML = 'Borrar &times'; // &times es una entidad de innerHTML por lo que no funcionaria con textContent.
+            nuevoGasto.appendChild(btnBorrar);
+
+            // Agregar al HTML
+            gastoListado.appendChild(nuevoGasto); // Recordemos que appendChild() NO borra los registros previos, por lo que es necesaria la función de limpiar.
+        });
+    }
+
+    limpiarHTML() {
+        while(gastoListado.firstChild) {
+            gastoListado.removeChild(gastoListado.firstChild);
+        }
+    }
+
 }
 
 
@@ -105,6 +139,10 @@ function agregarGasto(e) {
 
     // Mostrar mensaje de confirmación
     ui.imprimirAlerta('Gasto Agregado Correctamente');
+
+    // Imprimir los gastos
+    const {gastos} = presupuesto;
+    ui.agregarGastoListado(gastos);
 
     // Reinicia el formulario
     formulario.reset();
